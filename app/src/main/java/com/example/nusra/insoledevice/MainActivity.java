@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
         boolean enable = AdvanproAndroidSDK.getDeviceManager(BLEDeviceManager.class).isEnable(ConnectType.BLE);
         final BLEDeviceManager manager = AdvanproAndroidSDK.getDeviceManager(BLEDeviceManager.class);
-
+        Log.e("Useless","Hello world");
         try {
             manager.scan(5, new DeviceManagerScanCallback<BLEDeviceScanResult>(){
                 @Override
