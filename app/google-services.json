@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "46764293091",
+    "firebase_url": "https://insoledevice.firebaseio.com",
+    "project_id": "insoledevice",
+    "storage_bucket": "insoledevice.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46764293091:android:6ab5dda73203f51c",
+        "android_client_info": {
+          "package_name": "com.example.nusra.insoledevice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "46764293091-kh6hj3ohlqnkts99s477l3k8ud056j7s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nusra.insoledevice",
+            "certificate_hash": "4bbc301bbbcebdef8a96a95e49f1d7bc34313322"
+          }
+        },
+        {
+          "client_id": "46764293091-udjudlmcojpf57m25b1hpm3vruc117n2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyColSOSB1zrvxu_WxYlucylgsaEy1brM3Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "46764293091-udjudlmcojpf57m25b1hpm3vruc117n2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
