@@ -1,4 +1,4 @@
-package com.example.nusra.insoledevice;
+package com.example.nusra.hit;
 
 import org.junit.Test;
 

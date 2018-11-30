@@ -1,4 +1,4 @@
-package com.example.nusra.insoledevice;
+package com.example.nusra.hit;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.nusra.insoledevice", appContext.getPackageName());
+        assertEquals("com.example.nusra.hit", appContext.getPackageName());
     }
 }

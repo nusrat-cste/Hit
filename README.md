@@ -1,3 +1,0 @@
-# SDKtester
-# Hit
-# Hit
