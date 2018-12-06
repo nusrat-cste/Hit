@@ -155,21 +155,21 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG,"The connection is successful");
                     _ConnectedDevices.add(r_device);
 
-                    MainThreadDeviceEventCallback<BLEInsoleRealStepEventResult> callback = new MainThreadDeviceEventCallback<BLEInsoleRealStepEventResult>() {
-                        @Override
-                        public void onMainThreadData(Device device,BLEInsoleRealStepEventResult data)
-                        {
-                            Log.d("InsoleD","stepcount Device1"+ data.getWalkStep());
-                        }
-                    };
-                    r_device.on(BLEInsoleDevice.EVENT_INSOLE_REAL_STEP, callback);
+//                    MainThreadDeviceEventCallback<BLEInsoleRealStepEventResult> callback = new MainThreadDeviceEventCallback<BLEInsoleRealStepEventResult>() {
+//                        @Override
+//                        public void onMainThreadData(Device device,BLEInsoleRealStepEventResult data)
+//                        {
+//                            Log.d("InsoleD","stepcount Device1"+ data.getWalkStep());
+//                        }
+//                    };
+//                    r_device.on(BLEInsoleDevice.EVENT_INSOLE_REAL_STEP, callback);
 
                     //gets the data from the device like step counts...
                     MainThreadDeviceEventCallback<BLEInsoleRealStepEventResult> cb = new MainThreadDeviceEventCallback<BLEInsoleRealStepEventResult>() {
                         @Override
                         public void onMainThreadData(Device device,BLEInsoleRealStepEventResult data)
                         {
-                            writeToDB(lName,data.getWalkStep(),data.getWalkDuration(), data.getRunStep(),data.getRunDuration());
+                            writeToDB(lName,data.getWalkStep(),data.getWalkDuration(), data.getRunStep(),data.getRunDuration(),data.getGait());
                             Log.d(TAG,"step "+data.getWalkStep()+" gait "+data.getGait()+" isrun "+data.getIsRun());
                             Log.d(TAG,"status is "+data.getStatus());
                         }
@@ -180,6 +180,12 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onMainThreadData(Device device,BLEInsoleRealGaitEventResult data)
                         {
+
+                            writeToDB(rName,data.getTouchA(),data.getTouchB(),
+                                     data.getTouchC(), data.getTouchD(), data.getEctropion(),
+                                        data.getForefoot(), data.getHeel(),
+                                            data.getSole(), data.getVarus(), data.getImpact());
+
                             Log.d(TAG,"step A "+data.getTouchA()+" B "+data.getTouchB()+" C "+data.getTouchC()+" D "+data.getTouchD());
                             Log.d(TAG,"step "+data.getVarus()+" forefoot "+data.getForefoot()+" sole "+data.getSole());
                         }
@@ -216,26 +222,31 @@ public class MainActivity extends AppCompatActivity {
                         public void onMainThreadData(Device device,BLEInsoleRealStepEventResult data)
                         {
                             Log.d("InsoleD","stepcount Device1"+ data.getWalkStep());
-                            writeToDB(rName,data.getWalkStep(),data.getWalkDuration(), data.getRunStep(),data.getRunDuration());
+                            writeToDB(rName,data.getWalkStep(),data.getWalkDuration(), data.getRunStep(),data.getRunDuration(),data.getGait());
 
                         }
                     };
                     l_device.on(BLEInsoleDevice.EVENT_INSOLE_REAL_STEP, callback);
 //gets the data from the device like step counts...
-                    MainThreadDeviceEventCallback<BLEInsoleRealStepEventResult> cb = new MainThreadDeviceEventCallback<BLEInsoleRealStepEventResult>() {
-                        @Override
-                        public void onMainThreadData(Device device,BLEInsoleRealStepEventResult data)
-                        {
-// Notice: The callback has in the main thread
-                            Log.d(TAG,"step "+data.getWalkStep()+" gait "+data.getGait()+" isrun "+data.getIsRun());
-                        }
-                    };
-                    l_device.on(BLEInsoleDevice.EVENT_INSOLE_REAL_STEP, cb);
+//                    MainThreadDeviceEventCallback<BLEInsoleRealStepEventResult> cb = new MainThreadDeviceEventCallback<BLEInsoleRealStepEventResult>() {
+//                        @Override
+//                        public void onMainThreadData(Device device,BLEInsoleRealStepEventResult data)
+//                        {
+//// Notice: The callback has in the main thread
+//                            Log.d(TAG,"step "+data.getWalkStep()+" gait "+data.getGait()+" isrun "+data.getIsRun());
+//                        }
+//                    };
+//                    l_device.on(BLEInsoleDevice.EVENT_INSOLE_REAL_STEP, cb);
 
                     MainThreadDeviceEventCallback<BLEInsoleRealGaitEventResult> cb2 = new MainThreadDeviceEventCallback<BLEInsoleRealGaitEventResult>() {
                         @Override
                         public void onMainThreadData(Device device,BLEInsoleRealGaitEventResult data)
                         {
+
+                            writeToDB(lName,data.getTouchA(),data.getTouchB(),
+                                    data.getTouchC(), data.getTouchD(), data.getEctropion(),
+                                    data.getForefoot(), data.getHeel(),
+                                    data.getSole(), data.getVarus(), data.getImpact());
                             Log.d(TAG,"step A "+data.getTouchA()+" B "+data.getTouchB()+" C "+data.getTouchC()+" D "+data.getTouchD());
                             Log.d(TAG,"step "+data.getVarus()+" forefoot "+data.getForefoot()+" sole "+data.getSole());
                         }
@@ -279,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
             myRef.child("Right").child("MacAddress").setValue(SoleMac);}
     }
 
-    private void writeToDB(String SoleName,int wc, int wd, int rc, int rd) {
+    private void writeToDB(String SoleName,int wc, int wd, int rc, int rd, int gait) {
 
         Calendar  _time= _calender.getInstance();
         database = FirebaseDatabase.getInstance();
@@ -292,10 +303,35 @@ public class MainActivity extends AppCompatActivity {
         myRef.child(_tStamp.toString()).child("WalkDuration").setValue(wd);
         myRef.child(_tStamp.toString()).child("RunCount").setValue(rc);
         myRef.child(_tStamp.toString()).child("RunDuration").setValue(rd);
+        myRef.child(_tStamp.toString()).child("Gait").setValue(gait);
 
 //        myRef.child("Right").child("MacAddress").setValue(SoleMac);
     }
 
+    private void writeToDB(String SoleName,Boolean _touchA, Boolean _touchB,
+                           Boolean _touchC, Boolean _touchD, int ectropion,
+                           int forefoot, int heel, int sole, int varus, int impact) {
+
+        Calendar  _time= _calender.getInstance();
+        database = FirebaseDatabase.getInstance();
+        Long _tStamp = _time.getTimeInMillis();
+        Log.e("Insole",_tStamp.toString());
+
+        myRef = database.getReference("Data").child(SoleName).child("GaitData");
+
+        myRef.child(_tStamp.toString()).child("ectropion").setValue(ectropion);
+        myRef.child(_tStamp.toString()).child("forefoot").setValue(forefoot);
+        myRef.child(_tStamp.toString()).child("heel").setValue(heel);
+        myRef.child(_tStamp.toString()).child("impact").setValue(impact);
+        myRef.child(_tStamp.toString()).child("sole").setValue(sole);
+        myRef.child(_tStamp.toString()).child("varus").setValue(varus);
+        myRef.child(_tStamp.toString()).child("touchA").setValue(_touchA);
+        myRef.child(_tStamp.toString()).child("touchB").setValue(_touchB);
+        myRef.child(_tStamp.toString()).child("touchC").setValue(_touchC);
+        myRef.child(_tStamp.toString()).child("touchD").setValue(_touchD);
+
+//        myRef.child("Right").child("MacAddress").setValue(SoleMac);
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
